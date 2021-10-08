@@ -1,9 +1,61 @@
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.sql.*;
+import javax.swing.table.DefaultTableModel;
+
 public class HomePage extends javax.swing.JFrame {
 
-    public HomePage() {
+    public HomePage(){
         initComponents();
+        connect();
+        getAllStudentDetails();
     }
+    
+    Connection con;
+    PreparedStatement pst;
+    ResultSet rs;
+    
+    public void connect(){
+        try { 
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/college","root","Akhiljith@My112");
+        } catch (SQLException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void getAllStudentDetails(){
+    
+        try {
 
+            pst = con.prepareStatement("select roll_no,sname,address,Phone_no,e_mail from student");
+            rs = pst.executeQuery();
+            
+            while(rs.next()){
+                String roll_no = String.valueOf(rs.getInt("roll_no"));
+                String sname = rs.getString("sname");
+                String adderss = rs.getString("address");
+                String phone_no = rs.getString("Phone_no");
+                String e_mail = rs.getString("e_mail");
+                
+                String tableData[] = {roll_no,sname,adderss,phone_no,e_mail};
+                DefaultTableModel studentDataModel = (DefaultTableModel)student_table.getModel();
+                studentDataModel.addRow(tableData);
+            }
+            
+           // student_table.setModel(DbUtils.resultSetToTableModel(rs));
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -14,19 +66,19 @@ public class HomePage extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        student_table = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        sname = new javax.swing.JTextField();
+        roll_no = new javax.swing.JTextField();
+        Phone_no = new javax.swing.JTextField();
+        e_mail = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        address = new javax.swing.JTextArea();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
@@ -39,6 +91,8 @@ public class HomePage extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jButton8 = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        dep = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Home Page");
@@ -65,7 +119,7 @@ public class HomePage extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 486, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -85,7 +139,7 @@ public class HomePage extends javax.swing.JFrame {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        student_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -101,7 +155,13 @@ public class HomePage extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        student_table.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                student_tableFocusGained(evt);
+            }
+        });
+        jScrollPane1.setViewportView(student_table);
+        student_table.getAccessibleContext().setAccessibleName("student_table");
 
         jLabel2.setFont(new java.awt.Font("Poppins", 0, 14)); // NOI18N
         jLabel2.setText("Student details table");
@@ -121,26 +181,32 @@ public class HomePage extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
         jLabel7.setText("E-maiil");
 
-        jTextField1.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
-        jTextField1.setText("jTextField1");
+        sname.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
+        sname.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                snameActionPerformed(evt);
+            }
+        });
 
-        jTextField2.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
-        jTextField2.setText("jTextField1");
+        roll_no.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
 
-        jTextField3.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
-        jTextField3.setText("jTextField1");
+        Phone_no.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
 
-        jTextField4.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
-        jTextField4.setText("jTextField1");
+        e_mail.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        address.setColumns(20);
+        address.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
+        address.setRows(5);
+        jScrollPane2.setViewportView(address);
 
         jButton4.setBackground(new java.awt.Color(0, 204, 153));
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Save");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setBackground(new java.awt.Color(255, 204, 51));
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
@@ -212,6 +278,11 @@ public class HomePage extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jLabel11.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
+        jLabel11.setText("Department");
+
+        dep.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "IT", "EC", "CE", "ME" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -230,10 +301,18 @@ public class HomePage extends javax.swing.JFrame {
                                     .addComponent(jLabel5))
                                 .addGap(24, 24, 24)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField1)
-                                    .addComponent(jTextField2)
+                                    .addComponent(sname)
+                                    .addComponent(roll_no)
                                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel6)
+                                        .addComponent(jLabel7))
+                                    .addGap(17, 17, 17)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(Phone_no)
+                                        .addComponent(e_mail)))
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(33, 33, 33)
@@ -241,13 +320,9 @@ public class HomePage extends javax.swing.JFrame {
                                     .addGap(27, 27, 27)
                                     .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel6)
-                                        .addComponent(jLabel7))
-                                    .addGap(12, 12, 12)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(dep, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1)
@@ -270,24 +345,28 @@ public class HomePage extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(sname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                            .addComponent(roll_no, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(11, 11, 11)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Phone_no, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(e_mail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))
-                        .addGap(45, 45, 45)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(dep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(19, 19, 19)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton4)
                             .addComponent(jButton5)
@@ -299,8 +378,66 @@ public class HomePage extends javax.swing.JFrame {
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
+        sname.getAccessibleContext().setAccessibleName("sname");
+        roll_no.getAccessibleContext().setAccessibleName("roll_no");
+        roll_no.getAccessibleContext().setAccessibleDescription("");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void snameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_snameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_snameActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        String depId = null;
+        try {
+            String snametxt = sname.getText();
+            int rollno = Integer.parseInt(roll_no.getText());
+            String addresstxt = sname.getText();
+            String phno = Phone_no.getText();
+            String emailtxt = e_mail.getText();
+            String departmenttxt = dep.getSelectedItem().toString();
+            
+            pst = con.prepareStatement("select dep_id from department where dep_name = ?");
+            pst.setString(1, departmenttxt);
+            rs = pst.executeQuery();
+            
+            while(rs.next()){
+               depId = rs.getString(1);
+            }
+            
+            pst = con.prepareStatement("INSERT INTO student values(?,?,?,?,?,?)");
+            pst.setInt(1, rollno);
+            pst.setString(2, snametxt);
+            pst.setString(3, addresstxt);
+            pst.setString(4, phno);
+            pst.setString(5, emailtxt);
+            pst.setString(6, depId);
+            
+            int k = pst.executeUpdate();
+            
+            if(k==1){
+                sname.setText("");
+                roll_no.setText("");
+                sname.setText("");
+                Phone_no.setText("");
+                e_mail.setText("");
+                DefaultTableModel dm = (DefaultTableModel)student_table.getModel();
+                dm.getDataVector().removeAllElements();
+                dm.fireTableDataChanged(); // notifies the JTable that the model has changed
+                getAllStudentDetails();
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void student_tableFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_student_tableFocusGained
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_student_tableFocusGained
 
     /**
      * @param args the command line arguments
@@ -338,6 +475,10 @@ public class HomePage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField Phone_no;
+    private javax.swing.JTextArea address;
+    private javax.swing.JComboBox<String> dep;
+    private javax.swing.JTextField e_mail;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -349,6 +490,7 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -361,13 +503,10 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField roll_no;
+    private javax.swing.JTextField sname;
+    private javax.swing.JTable student_table;
     // End of variables declaration//GEN-END:variables
 }
