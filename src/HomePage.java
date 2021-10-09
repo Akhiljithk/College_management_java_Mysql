@@ -597,14 +597,16 @@ public class HomePage extends javax.swing.JFrame {
             String phnotxt = Phone_no.getText();
             String emailtxt = e_mail.getText();
             String departmenttxt = dep.getSelectedItem().toString();
-
+            
+            
             pst = con.prepareStatement("select dep_id from department where dep_name = ?");
             pst.setString(1, departmenttxt);
             rs = pst.executeQuery();
-
+            
         while(rs.next()){
            depId = rs.getString(1);
         }
+       
         pst = con.prepareStatement("update student set roll_no=?, sname=?, address=?, phone_no=?,e_mail=?, dep_id=? where roll_no = ?");
         pst.setInt(1, rollnotxt);
         pst.setString(2, nametxt);
