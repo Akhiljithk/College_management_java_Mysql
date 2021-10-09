@@ -1,6 +1,9 @@
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.*;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class HomePage extends javax.swing.JFrame {
@@ -27,7 +30,19 @@ public class HomePage extends javax.swing.JFrame {
             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+    public void refreshStudentTable(){
+            DefaultTableModel dm = (DefaultTableModel)student_table.getModel();
+            dm.getDataVector().removeAllElements();
+            dm.fireTableDataChanged(); // notifies the JTable that the model has changed
+            getAllStudentDetails();
+    }
+    public void clearStudentTextFeild(){
+        sname.setText("");
+        roll_no.setText("");
+        address.setText("");
+        Phone_no.setText("");
+        e_mail.setText("");
+    }
     public void getAllStudentDetails(){
     
         try {
@@ -93,6 +108,9 @@ public class HomePage extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
         dep = new javax.swing.JComboBox<>();
+        jButton9 = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        jButton10 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Home Page");
@@ -155,6 +173,7 @@ public class HomePage extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        student_table.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         student_table.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 student_tableFocusGained(evt);
@@ -211,10 +230,20 @@ public class HomePage extends javax.swing.JFrame {
         jButton5.setBackground(new java.awt.Color(255, 204, 51));
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("Update");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jButton6.setBackground(new java.awt.Color(255, 102, 102));
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("Clear All");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Student filters"));
 
@@ -281,7 +310,33 @@ public class HomePage extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
         jLabel11.setText("Department");
 
-        dep.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "IT", "EC", "CE", "ME" }));
+        dep.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ME", "EC", "IT", "CE" }));
+        dep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                depActionPerformed(evt);
+            }
+        });
+
+        jButton9.setBackground(new java.awt.Color(255, 102, 102));
+        jButton9.setForeground(new java.awt.Color(255, 255, 255));
+        jButton9.setText("Delete");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setFont(new java.awt.Font("Poppins", 0, 11)); // NOI18N
+        jLabel12.setText("Table settings");
+
+        jButton10.setBackground(jButton5.getBackground());
+        jButton10.setForeground(new java.awt.Color(255, 255, 255));
+        jButton10.setText("Edit");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -324,9 +379,16 @@ public class HomePage extends javax.swing.JFrame {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(dep, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(26, 26, 26)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane1)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -370,12 +432,18 @@ public class HomePage extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton4)
                             .addComponent(jButton5)
-                            .addComponent(jButton6)))
+                            .addComponent(jButton6))
+                        .addContainerGap(55, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(39, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton9)
+                            .addComponent(jLabel12)
+                            .addComponent(jButton10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         sname.getAccessibleContext().setAccessibleName("sname");
@@ -394,7 +462,7 @@ public class HomePage extends javax.swing.JFrame {
         try {
             String snametxt = sname.getText();
             int rollno = Integer.parseInt(roll_no.getText());
-            String addresstxt = sname.getText();
+            String addresstxt = address.getText();
             String phno = Phone_no.getText();
             String emailtxt = e_mail.getText();
             String departmenttxt = dep.getSelectedItem().toString();
@@ -420,7 +488,7 @@ public class HomePage extends javax.swing.JFrame {
             if(k==1){
                 sname.setText("");
                 roll_no.setText("");
-                sname.setText("");
+                address.setText("");
                 Phone_no.setText("");
                 e_mail.setText("");
                 DefaultTableModel dm = (DefaultTableModel)student_table.getModel();
@@ -436,8 +504,134 @@ public class HomePage extends javax.swing.JFrame {
 
     private void student_tableFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_student_tableFocusGained
         // TODO add your handling code here:
-        
+//         InputMap im = student_table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+//         System.out.println(im);
     }//GEN-LAST:event_student_tableFocusGained
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        DefaultTableModel tbModel = (DefaultTableModel) student_table.getModel();
+        
+        if(student_table.getSelectedRowCount()==1){
+            try {
+                int selectedRow = student_table.getSelectedRow();
+                String rollno = student_table.getModel().getValueAt(selectedRow, 0).toString();
+                
+                pst = con.prepareStatement("delete from student where roll_no = ?");
+                pst.setString(1, rollno);
+                int k = pst.executeUpdate();
+                if(k==1){
+                    JOptionPane.showMessageDialog(this, "Delete aayi ketto");
+                }
+                tbModel.removeRow(student_table.getSelectedRow());
+            } catch (SQLException ex) {
+                Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else if(student_table.getSelectedRowCount()>1){
+                JOptionPane.showMessageDialog(this, "agane select cheyth delete aakan ninte achan kond query ezhuthuvooda!!"); 
+        }else{
+            JOptionPane.showMessageDialog(this, "select a item to delete");
+        }
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        try {
+           DefaultTableModel tbModel = (DefaultTableModel) student_table.getModel();
+        
+           if(student_table.getSelectedRowCount()==1){
+    
+//                jButton10.setEnabled(false);
+//                jButton9.setEnabled(false);
+//                jButton4.setEnabled(false);
+                
+                int selectedRow = student_table.getSelectedRow();
+                String rollno = student_table.getModel().getValueAt(selectedRow, 0).toString();
+                
+                pst = con.prepareStatement("select student.sname,student.roll_no,student.address,student.phone_no,student.e_mail, department.dep_name from student join department on student.dep_id = department.dep_id where roll_no = ?;");
+                pst.setInt(1, Integer.parseInt(rollno));
+                rs = pst.executeQuery();
+            
+                while(rs.next()){
+                    String roll_not = String.valueOf(rs.getInt("student.roll_no"));
+                    String snamet = rs.getString("student.sname");
+                    String addersst = rs.getString("student.address");
+                    String phone_not = rs.getString("student.Phone_no");
+                    String e_mailt = rs.getString("student.e_mail");
+                    String depnamet = rs.getString("department.dep_name");
+                    
+                    sname.setText(snamet);
+                    roll_no.setText(roll_not);
+                    address.setText(addersst);
+                    Phone_no.setText(phone_not);
+                    e_mail.setText(e_mailt);
+                    dep.setSelectedItem(depnamet);
+                    
+                }
+                
+               // refreshStudentTable();
+
+        }else if(student_table.getSelectedRowCount()>1){
+                JOptionPane.showMessageDialog(this, "agane select cheyth delete aakan ninte achan kond query ezhuthuvooda!!"); 
+        }else{
+            JOptionPane.showMessageDialog(this, "select a item to update");
+        }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+                sname.setText("");
+                roll_no.setText("");
+                address.setText("");
+                Phone_no.setText("");
+                e_mail.setText("");
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        String depId = null;
+        try {
+            String nametxt = sname.getText();
+            int rollnotxt = Integer.parseInt(roll_no.getText());
+            String addresstxt = address.getText();
+            String phnotxt = Phone_no.getText();
+            String emailtxt = e_mail.getText();
+            String departmenttxt = dep.getSelectedItem().toString();
+
+            pst = con.prepareStatement("select dep_id from department where dep_name = ?");
+            pst.setString(1, departmenttxt);
+            rs = pst.executeQuery();
+
+        while(rs.next()){
+           depId = rs.getString(1);
+        }
+        pst = con.prepareStatement("update student set roll_no=?, sname=?, address=?, phone_no=?,e_mail=?, dep_id=? where roll_no = ?");
+        pst.setInt(1, rollnotxt);
+        pst.setString(2, nametxt);
+        pst.setString(3, addresstxt);
+        pst.setString(4, phnotxt);
+        pst.setString(5, emailtxt);
+        pst.setString(6, depId);
+        pst.setInt(7, rollnotxt);
+        
+        int k = pst.executeUpdate();
+        
+        if(k==1){
+            JOptionPane.showMessageDialog(this, "Details updated");
+            clearStudentTextFeild();
+            refreshStudentTable();
+        }else{
+            JOptionPane.showMessageDialog(this, "error on update");
+        }
+        
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void depActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_depActionPerformed
 
     /**
      * @param args the command line arguments
@@ -480,6 +674,7 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> dep;
     private javax.swing.JTextField e_mail;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -487,10 +682,12 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
